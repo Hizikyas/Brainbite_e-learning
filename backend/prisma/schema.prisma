@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model courses {
+  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title        String
+  subject      String
+  description  String?
+  created_by   String        @db.Uuid
+  is_published Boolean       @default(true)
+  created_at   DateTime      @default(now())
+  
+  // Relations
+  course_pages course_pages[]
+  questions    questions[]
+  attempts     attempts[]
+  
+  @@map("courses")
+}
+
+model course_pages {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  course_id  String   @db.Uuid
+  page_index Int
+  title      String
+  content_md String?
+  created_at DateTime @default(now())
+  
+  // Relations
+  course courses @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  
+  @@map("course_pages")
+  @@index([course_id])
+}
+
+model questions {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  course_id     String   @db.Uuid
+  question_text String
+  type          String   @default("mcq")
+  created_at    DateTime @default(now())
+  
+  // Relations
+  course            courses           @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  question_options  question_options[]
+  
+  @@map("questions")
+  @@index([course_id])
+}
+
+model question_options {
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  question_id String  @db.Uuid
+  option_text String
+  is_correct  Boolean @default(false)
+  
+  // Relations
+  question questions @relation(fields: [question_id], references: [id], onDelete: Cascade)
+  
+  @@map("question_options")
+  @@index([question_id])
+}
+
+model attempts {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  course_id   String   @db.Uuid
+  user_id     String   @db.Uuid
+  score       Int?
+  answers_json Json?   @db.JsonB
+  created_at  DateTime @default(now())
+  
+  // Relations
+  course courses @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  
+  @@map("attempts")
+  @@index([course_id])
+  @@index([user_id])
+}
