@@ -1,8 +1,7 @@
 export default defineAppConfig({
-  ui: {
-    colors: {
-      primary: 'green',
-      neutral: 'slate'
-    }
+  title: 'BrainBite',
+  theme: {
+    primary: '#4f46e5',
+    secondary: '#10b981'
   }
 })
