@@ -9,5 +9,6 @@ export declare class AIService {
         questions: any;
     }>;
     private buildPrompt;
+    private mockCourse;
     private transformAIContent;
 }

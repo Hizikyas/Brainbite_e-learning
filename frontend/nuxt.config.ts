@@ -17,7 +17,8 @@ export default defineNuxtConfig({
     public: {
       supabaseUrl: process.env.NUXT_PUBLIC_SUPABASE_URL,
       supabaseAnonKey: process.env.NUXT_PUBLIC_SUPABASE_ANON_KEY,
-      backendUrl: process.env.NUXT_PUBLIC_BACKEND_URL || 'http://localhost:3001',
+      // Backend currently runs on port 3002; override with NUXT_PUBLIC_BACKEND_URL if different
+      backendUrl: process.env.NUXT_PUBLIC_BACKEND_URL || 'http://localhost:3002',
     }
   },
   

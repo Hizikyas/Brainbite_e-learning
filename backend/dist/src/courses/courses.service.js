@@ -64,62 +64,60 @@ let CoursesService = class CoursesService {
         return course;
     }
     async create(createCourseDto) {
-        return this.prisma.$transaction(async (tx) => {
-            const course = await tx.courses.create({
+        const course = await this.prisma.courses.create({
+            data: {
+                title: createCourseDto.title,
+                subject: createCourseDto.subject,
+                description: createCourseDto.description,
+                created_by: createCourseDto.created_by,
+                is_published: createCourseDto.is_published,
+            },
+        });
+        for (let i = 0; i < createCourseDto.pages.length; i++) {
+            await this.prisma.course_pages.create({
                 data: {
-                    title: createCourseDto.title,
-                    subject: createCourseDto.subject,
-                    description: createCourseDto.description,
-                    created_by: createCourseDto.created_by,
-                    is_published: createCourseDto.is_published,
+                    course_id: course.id,
+                    page_index: i,
+                    title: createCourseDto.pages[i].title,
+                    content_md: createCourseDto.pages[i].content_md,
                 },
             });
-            for (let i = 0; i < createCourseDto.pages.length; i++) {
-                await tx.course_pages.create({
-                    data: {
-                        course_id: course.id,
-                        page_index: i,
-                        title: createCourseDto.pages[i].title,
-                        content_md: createCourseDto.pages[i].content_md,
-                    },
-                });
-            }
-            for (const question of createCourseDto.questions) {
-                const createdQuestion = await tx.questions.create({
-                    data: {
-                        course_id: course.id,
-                        question_text: question.question_text,
-                        type: 'mcq',
-                    },
-                });
-                for (const option of question.options) {
-                    await tx.question_options.create({
-                        data: {
-                            question_id: createdQuestion.id,
-                            option_text: option.option_text,
-                            is_correct: option.is_correct,
-                        },
-                    });
-                }
-            }
-            const fullCourse = await tx.courses.findUnique({
-                where: { id: course.id },
-                include: {
-                    course_pages: {
-                        orderBy: { page_index: 'asc' }
-                    },
-                    questions: {
-                        include: {
-                            question_options: true
-                        }
-                    }
-                }
+        }
+        for (const question of createCourseDto.questions) {
+            const createdQuestion = await this.prisma.questions.create({
+                data: {
+                    course_id: course.id,
+                    question_text: question.question_text,
+                    type: 'mcq',
+                },
             });
-            if (!fullCourse) {
-                throw new Error('Failed to retrieve created course');
+            for (const option of question.options) {
+                await this.prisma.question_options.create({
+                    data: {
+                        question_id: createdQuestion.id,
+                        option_text: option.option_text,
+                        is_correct: option.is_correct,
+                    },
+                });
             }
-            return fullCourse;
+        }
+        const fullCourse = await this.prisma.courses.findUnique({
+            where: { id: course.id },
+            include: {
+                course_pages: {
+                    orderBy: { page_index: 'asc' },
+                },
+                questions: {
+                    include: {
+                        question_options: true,
+                    },
+                },
+            },
         });
+        if (!fullCourse) {
+            throw new Error('Failed to retrieve created course');
+        }
+        return fullCourse;
     }
 };
 exports.CoursesService = CoursesService;

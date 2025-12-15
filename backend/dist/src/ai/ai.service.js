@@ -24,7 +24,8 @@ let AIService = class AIService {
     }
     async generateCourse(generateCourseDto) {
         if (!process.env.OPENAI_API_KEY) {
-            throw new Error('OPENAI_API_KEY is not configured');
+            console.warn('OPENAI_API_KEY is not configured. Using mock AI course content.');
+            return this.mockCourse(generateCourseDto);
         }
         const prompt = this.buildPrompt(generateCourseDto);
         try {
@@ -141,6 +142,49 @@ let AIService = class AIService {
     
     Ensure the content is accurate, educational, and appropriate for the specified level and age range.
     `;
+    }
+    mockCourse(dto) {
+        const subject = dto.subject || 'Sample Subject';
+        return {
+            title: `Introduction to ${subject}`,
+            description: `A short, interactive introduction to ${subject} generated locally as a mock course.`,
+            pages: [
+                {
+                    title: `What is ${subject}?`,
+                    content_md: `# What is ${subject}?\n\nThis page gives a high-level overview of **${subject}** and why it matters.`
+                },
+                {
+                    title: `${subject} in the real world`,
+                    content_md: `# ${subject} in the real world\n\nHere we explore practical, everyday examples of **${subject}**.`
+                },
+                {
+                    title: `Core concepts of ${subject}`,
+                    content_md: `# Core concepts\n\nWe break down the most important ideas behind **${subject}** in simple language.`
+                },
+                {
+                    title: `Review & next steps`,
+                    content_md: `# Review\n\nLet's recap what you've learned about **${subject}** and suggest some next steps for learning more.`
+                }
+            ],
+            questions: [
+                {
+                    question_text: `Which statement best describes ${subject}?`,
+                    options: [
+                        { option_text: `A topic you are currently learning about: ${subject}`, is_correct: true },
+                        { option_text: 'Something completely unrelated to this course', is_correct: false },
+                        { option_text: 'A random guess with no context', is_correct: false },
+                    ]
+                },
+                {
+                    question_text: `Why is learning ${subject} useful?`,
+                    options: [
+                        { option_text: `It can be applied to real-world situations related to ${subject}`, is_correct: true },
+                        { option_text: 'It has no practical use at all', is_correct: false },
+                        { option_text: 'It is only useful in video games', is_correct: false },
+                    ]
+                }
+            ]
+        };
     }
     transformAIContent(aiContent) {
         if (!aiContent.title || !aiContent.description) {
