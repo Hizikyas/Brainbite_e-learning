@@ -3,14 +3,14 @@
     <!-- Header -->
     <div class="flex justify-between items-center mb-8">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900">Courses</h1>
-        <p class="mt-1 text-sm text-gray-600">
+        <h1 class="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Courses</h1>
+        <p class="mt-2 text-sm text-gray-600">
           Browse all available courses
         </p>
       </div>
       <NuxtLink
-        to="/generate-course"
-        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        to="/courses/generate-course"
+        class="inline-flex items-center px-5 py-3 border border-transparent text-sm font-medium rounded-lg shadow-lg text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform transition-all hover:scale-105"
       >
         <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -65,26 +65,36 @@
       <div
         v-for="course in courses"
         :key="course.id"
-        class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow cursor-pointer"
+        class="bg-white overflow-hidden shadow-lg rounded-xl hover:shadow-2xl transition-all duration-300 cursor-pointer border border-gray-100 hover:border-indigo-300 transform hover:-translate-y-1"
         @click="$router.push(`/courses/${course.id}`)"
       >
         <div class="p-6">
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between mb-3">
             <div class="flex-1">
-              <h3 class="text-lg font-medium text-gray-900">{{ course.title }}</h3>
-              <p class="mt-1 text-sm text-gray-600">{{ course.subject }}</p>
+              <h3 class="text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{{ course.title }}</h3>
+              <p class="mt-1 text-sm font-medium text-indigo-600">{{ course.subject }}</p>
             </div>
             <span
-              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-              :class="course.is_published ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'"
+              class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold shadow-sm"
+              :class="course.is_published ? 'bg-gradient-to-r from-green-100 to-emerald-100 text-green-800' : 'bg-gradient-to-r from-yellow-100 to-amber-100 text-yellow-800'"
             >
               {{ course.is_published ? 'Published' : 'Draft' }}
             </span>
           </div>
-          <p class="mt-3 text-sm text-gray-500 line-clamp-2">{{ course.description }}</p>
-          <div class="mt-4 flex items-center justify-between text-sm text-gray-500">
-            <span>{{ course.course_pages?.length || 0 }} lessons</span>
-            <span>{{ course.questions?.length || 0 }} questions</span>
+          <p class="mt-3 text-sm text-gray-600 line-clamp-2 leading-relaxed">{{ course.description }}</p>
+          <div class="mt-5 flex items-center justify-between text-sm pt-4 border-t border-gray-100">
+            <span class="flex items-center text-gray-600">
+              <svg class="w-4 h-4 mr-1 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              {{ course.course_pages?.length || 0 }} lessons
+            </span>
+            <span class="flex items-center text-gray-600">
+              <svg class="w-4 h-4 mr-1 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {{ course.questions?.length || 0 }} questions
+            </span>
           </div>
         </div>
       </div>

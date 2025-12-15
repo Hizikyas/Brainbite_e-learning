@@ -2,14 +2,14 @@
   <div>
     <!-- Header -->
     <div class="mb-8">
-      <h1 class="text-2xl font-bold text-gray-900">Generate Course with AI</h1>
-      <p class="mt-1 text-sm text-gray-600">
+      <h1 class="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Generate Course with AI</h1>
+      <p class="mt-2 text-sm text-gray-600">
         Let AI create a personalized course for you
       </p>
     </div>
 
     <!-- Generate Form -->
-    <div class="bg-white shadow rounded-lg">
+    <div class="bg-white shadow-xl rounded-xl border border-gray-100">
       <div class="px-6 py-8">
         <form @submit.prevent="handleSubmit" class="space-y-6">
           <!-- Subject -->
@@ -23,7 +23,7 @@
                 v-model="form.subject"
                 type="text"
                 required
-                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                class="shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-lg px-4 py-3 bg-white text-gray-900"
                 placeholder="e.g., Introduction to JavaScript, Photosynthesis, World War II"
               />
             </div>
@@ -106,7 +106,7 @@
               <button
                 type="submit"
                 :disabled="loading"
-                class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="inline-flex items-center px-6 py-3 border border-transparent text-base font-semibold rounded-lg shadow-lg text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all hover:scale-105"
               >
                 <svg v-if="loading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

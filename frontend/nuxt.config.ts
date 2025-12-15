@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: ['@nuxtjs/supabase', '@pinia/nuxt'],
+  modules: ['@nuxt/ui', '@nuxtjs/supabase', '@pinia/nuxt'],
   
   supabase: {
     redirectOptions: {
@@ -27,7 +27,7 @@ export default defineNuxtConfig({
   
   app: {
     head: {
-      title: 'BrainBite - E-Learning Platform',
+      title: 'e-Learning Platform',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },

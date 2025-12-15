@@ -214,7 +214,7 @@ const speakCurrentPage = () => {
   // Stop any ongoing speech
   speechSynthesis.cancel();
 
-  // Remove markdown for cleaner speech
+      // Remove markdown for cleaner speech
   const text = currentPage.content_md
     .replace(/[#*`\[\]()]/g, '') // Remove markdown syntax
     .replace(/\n+/g, ' ') // Replace newlines with spaces
@@ -224,9 +224,9 @@ const speakCurrentPage = () => {
     return;
   }
 
-  const utterance = new SpeechSynthesisUtterance(text);
+      const utterance = new SpeechSynthesisUtterance(text);
   utterance.rate = 0.9;
-  utterance.pitch = 1.0;
+      utterance.pitch = 1.0;
   utterance.volume = 1.0;
   
   utterance.onerror = (event) => {
@@ -234,7 +234,7 @@ const speakCurrentPage = () => {
     alert('Error reading text. Please try again.');
   };
 
-  speechSynthesis.speak(utterance);
+      speechSynthesis.speak(utterance);
 };
 
 const fetchCourse = async () => {

@@ -160,8 +160,8 @@ export class AIService {
           throw new Error(`Page ${index + 1} is missing title or content_md`);
         }
         return {
-          title: page.title,
-          content_md: page.content_md,
+        title: page.title,
+        content_md: page.content_md,
         };
       }),
       questions: aiContent.questions.map((question: any, qIndex: number) => {
@@ -175,11 +175,11 @@ export class AIService {
         }
 
         return {
-          question_text: question.question_text,
-          options: question.options.map((option: any) => ({
-            option_text: option.option_text,
+        question_text: question.question_text,
+        options: question.options.map((option: any) => ({
+          option_text: option.option_text,
             is_correct: option.is_correct || false,
-          })),
+      })),
         };
       }),
     };

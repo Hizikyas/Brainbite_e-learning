@@ -1,19 +1,19 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
       <div class="text-center">
         <AppLogo class="justify-center" />
-        <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
-          Sign in to your account
+        <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white">
+          {{ showSignUp ? 'Create your account' : 'Sign in to your account' }}
         </h2>
-        <p class="mt-2 text-sm text-gray-600">
-          Or <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500" @click.prevent="showSignUp = !showSignUp">
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          Or <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400" @click.prevent="showSignUp = !showSignUp">
             {{ showSignUp ? 'sign in' : 'create a new account' }}
           </a>
         </p>
       </div>
       
-      <div class="mt-8 bg-white py-8 px-4 shadow rounded-lg sm:px-10">
+      <div class="mt-8 bg-white dark:bg-gray-800 py-8 px-4 shadow-xl rounded-xl sm:px-10 border border-gray-100 dark:border-gray-700">
         <form class="space-y-6" @submit.prevent="handleSubmit">
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700">
@@ -51,7 +51,7 @@
             </div>
           </div>
 
-          <div v-if="error" class="rounded-md bg-red-50 p-4">
+          <div v-if="error" class="rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4">
             <div class="flex">
               <div class="flex-shrink-0">
                 <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,7 +59,7 @@
                 </svg>
               </div>
               <div class="ml-3">
-                <p class="text-sm font-medium text-red-800">{{ error }}</p>
+                <p class="text-sm font-medium text-red-800 dark:text-red-200">{{ error }}</p>
               </div>
             </div>
           </div>
@@ -68,9 +68,15 @@
             <button
               type="submit"
               :disabled="loading"
-              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
-              <span v-if="loading">Processing...</span>
+              <span v-if="loading" class="flex items-center">
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Processing...
+              </span>
               <span v-else>{{ showSignUp ? 'Sign up' : 'Sign in' }}</span>
             </button>
           </div>
@@ -103,12 +109,23 @@ const handleSubmit = async () => {
       const { data, error: signUpError } = await supabase.auth.signUp({
         email: form.value.email,
         password: form.value.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/courses`
+        }
       });
 
       if (signUpError) throw signUpError;
       
-      alert('Account created! Please check your email for confirmation.');
+      if (data.user && !data.session) {
+        error.value = 'Please check your email to confirm your account before signing in.';
       showSignUp.value = false;
+        return;
+      }
+      
+      // If session exists, redirect
+      if (data.session) {
+        router.push('/courses');
+      }
     } else {
       // Sign in
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
@@ -116,13 +133,24 @@ const handleSubmit = async () => {
         password: form.value.password,
       });
 
-      if (signInError) throw signInError;
+      if (signInError) {
+        if (signInError.message.includes('email_not_confirmed') || signInError.message.includes('Email not confirmed')) {
+          error.value = 'Please check your email and confirm your account before signing in.';
+        } else {
+          throw signInError;
+        }
+        return;
+      }
       
       // Redirect to courses
+      if (data.session) {
       router.push('/courses');
+      }
     }
   } catch (err: any) {
+    if (err.message && !err.message.includes('email_not_confirmed')) {
     error.value = err.message || 'Authentication failed';
+    }
   } finally {
     loading.value = false;
   }

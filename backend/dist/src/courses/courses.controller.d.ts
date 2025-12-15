@@ -8,98 +8,98 @@ export declare class CoursesController {
     constructor(coursesService: CoursesService, aiService: AIService);
     findAll(req: any): Promise<({
         course_pages: {
-            id: string;
             title: string;
+            content_md: string | null;
+            id: string;
             created_at: Date;
             page_index: number;
             course_id: string;
-            content_md: string | null;
         }[];
         questions: ({
             question_options: {
-                id: string;
-                question_id: string;
                 option_text: string;
                 is_correct: boolean;
+                id: string;
+                question_id: string;
             }[];
         } & {
+            question_text: string;
             id: string;
             created_at: Date;
             course_id: string;
-            question_text: string;
             type: string;
         })[];
     } & {
-        id: string;
         title: string;
         subject: string;
         description: string | null;
         created_by: string;
         is_published: boolean;
+        id: string;
         created_at: Date;
     })[]>;
     findOne(id: string, req: any): Promise<{
         course_pages: {
-            id: string;
             title: string;
+            content_md: string | null;
+            id: string;
             created_at: Date;
             page_index: number;
             course_id: string;
-            content_md: string | null;
         }[];
         questions: ({
             question_options: {
-                id: string;
-                question_id: string;
                 option_text: string;
                 is_correct: boolean;
+                id: string;
+                question_id: string;
             }[];
         } & {
+            question_text: string;
             id: string;
             created_at: Date;
             course_id: string;
-            question_text: string;
             type: string;
         })[];
     } & {
-        id: string;
         title: string;
         subject: string;
         description: string | null;
         created_by: string;
         is_published: boolean;
+        id: string;
         created_at: Date;
     }>;
     create(createCourseDto: CreateCourseDto): Promise<{
         course_pages: {
-            id: string;
             title: string;
+            content_md: string | null;
+            id: string;
             created_at: Date;
             page_index: number;
             course_id: string;
-            content_md: string | null;
         }[];
         questions: ({
             question_options: {
-                id: string;
-                question_id: string;
                 option_text: string;
                 is_correct: boolean;
+                id: string;
+                question_id: string;
             }[];
         } & {
+            question_text: string;
             id: string;
             created_at: Date;
             course_id: string;
-            question_text: string;
             type: string;
         })[];
     } & {
-        id: string;
         title: string;
         subject: string;
         description: string | null;
         created_by: string;
         is_published: boolean;
+        id: string;
         created_at: Date;
     }>;
     generate(generateCourseDto: GenerateCourseDto, req: any): Promise<{
@@ -107,34 +107,34 @@ export declare class CoursesController {
         course_id: string;
         course: {
             course_pages: {
-                id: string;
                 title: string;
+                content_md: string | null;
+                id: string;
                 created_at: Date;
                 page_index: number;
                 course_id: string;
-                content_md: string | null;
             }[];
             questions: ({
                 question_options: {
-                    id: string;
-                    question_id: string;
                     option_text: string;
                     is_correct: boolean;
+                    id: string;
+                    question_id: string;
                 }[];
             } & {
+                question_text: string;
                 id: string;
                 created_at: Date;
                 course_id: string;
-                question_text: string;
                 type: string;
             })[];
         } & {
-            id: string;
             title: string;
             subject: string;
             description: string | null;
             created_by: string;
             is_published: boolean;
+            id: string;
             created_at: Date;
         };
     }>;
